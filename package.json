@@ -1,0 +1,16 @@
+{
+  "name": "revmo_trader",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "revine kim",
+  "license": "ISC",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "macd": "^1.0.2",
+    "request": "^2.83.0"
+  }
+}
