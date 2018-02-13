@@ -28,6 +28,7 @@ class Currency {
     this.name = name;
     this.key = key;
     this.minUnitTrade = MIN_TRADE_UNITS[key];
+    this.quantity = 0;
 
     // Chart raw data
     this.highPrice = [];

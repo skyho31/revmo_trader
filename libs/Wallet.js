@@ -33,7 +33,13 @@ class Wallet {
         walletObj[key] = new Currency(key, name);
       }
 
-      return walletObj;
+      return {
+        default : this.default,
+        totalMoney : this.totalMoney,
+        krw : this.krw,
+        totalTradeAmount : this.totalTradeAmount,
+        currency : walletObj
+      };
     } catch(e){
       console.log('[Wallet] Make Wallet Failed. ' + e);
       return false;
