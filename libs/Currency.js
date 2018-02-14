@@ -27,7 +27,7 @@ class Currency {
     // Default Data
     this.name = name;
     this.key = key;
-    this.minUnitTrade = MIN_TRADE_UNITS[key];
+    this.minTradeUnit = MIN_TRADE_UNITS[key];
     this.quantity = 0;
 
     // Chart raw data
@@ -40,11 +40,15 @@ class Currency {
     this.recentBoughtPrice = 0;
     this.expectedProfit = 0;
     this.maxExpectedProfit = 0;
+    this.sellPrice = 0;
+    this.buyPrice = 0;
 
     // MACD data
     this.histogramGraph = [];
     this.macdGraph = [];
     this.signalGraph = [];
+
+
   }
 }
 

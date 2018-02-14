@@ -9,7 +9,7 @@
       "type": "node",
       "request": "launch",
       "name": "프로그램 시작",
-      "program": "${workspaceFolder}/test.js"
+      "program": "${workspaceFolder}/amo.js"
     }
   ]
 }

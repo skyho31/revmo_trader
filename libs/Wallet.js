@@ -19,6 +19,7 @@ class Wallet {
     this.totalMoney = 0;
     this.krw = defaultMoney;
     this.totalTradeAmount = 0;
+    this.tradeAmount = 0;
   }
 
   makeWallet(){
@@ -36,6 +37,7 @@ class Wallet {
       return {
         default : this.default,
         totalMoney : this.totalMoney,
+        tradeAmount: this.tradeAmount,
         krw : this.krw,
         totalTradeAmount : this.totalTradeAmount,
         currency : walletObj
