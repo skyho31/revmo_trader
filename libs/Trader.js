@@ -15,7 +15,7 @@ const events = require('events');
 const colors = require('colors');
 
 // bithumb module
-const xCoin = require('./xCoin');
+// const xCoin = require('./xCoin');
 
 // custom modules
 const Log = require('../../src/Log');
@@ -115,15 +115,19 @@ class Trader {
     let histoDiffRate = Util.getPercent(curHisto, prevHisto);
     let macdDiffRate = Util.getPercent(curMacd, prevMacd);
 
+    if(curHisto * prevHisto < 0 && curHisto > 0 && prevHisto < 0){
+      currency.isGoldenCross = true;
+      console.log(`[${currency.name}] Meet golden cross.`)
+    }
 
     // basic tradeLogic
     if(curHisto < 0){
       this.sellCoin(currency);
-    } else if (curHisto * prevHisto <= 0 && curHisto >= 0 && prevHisto <= 0){
-      this.buyCoin(currency);
+    } else if (currency.isGoldenCross && histoDiffRate > 0 && currency.quantity <= currency.minTradeUnit){
+      this.buyCoin(currency, curPrice);
     }
 
-    console.log(`[${this.traderName}] ${currency.key} Price : ${curPrice} (${priceDiffRate}%) Macd : ${curMacd.toFixed(2)} (${macdDiffRate}%) Histo : ${curHisto.toFixed(2)} (${histoDiffRate}%) / ${Util.getTime().green}`);
+    //console.log(`[${this.traderName}] ${currency.key} Price : ${curPrice} (${priceDiffRate}%) Macd : ${curMacd.toFixed(2)} (${macdDiffRate}%) Histo : ${curHisto.toFixed(2)} (${histoDiffRate}%) / ${Util.getTime().green}`);
   }
 
   checkStatus(){
@@ -133,7 +137,7 @@ class Trader {
       let realMoney = totalMoney - fee;
       let profitRate = ((realMoney / this.wallet.default) - 1) * 100;
 
-      console.log(`[${this.traderName}] TotalMoney : ${Math.floor(realMoney)}(${profitRate.toFixed(2)}%) TradeAmount : ${Math.floor(this.wallet.tradeAmount)} CurrentKRW : ￦ ${this.wallet.krw}`.blue)
+      console.log(`[${this.traderName}] TotalMoney : ${Math.floor(realMoney)}(${profitRate.toFixed(2)}%) TradeAmount : ${Math.floor(this.wallet.tradeAmount)} CurrentKRW : ￦ ${this.wallet.krw}`.yellow)
 
       fs.writeFile(`./logs/${this.traderName}_wallet.json`, JSON.stringify(this.wallet), (err) => {
         if(err) console.log(err);
@@ -212,7 +216,7 @@ class Trader {
    * @param {Currency Object} currency 
    * @param {Number} requestedQuantity 
    */
-  buyCoin(currency, requestedQuantity = 10){
+  buyCoin(currency, curPrice, requestedQuantity = 10){
     let key = currency.key;
     let name = currency.name;
     let buyPrice = currency.buyPrice;
@@ -225,14 +229,15 @@ class Trader {
     availableBuyCost *= 1 + TRACKING_ERROR;
 
     if(buyQuantity > currency.minTradeUnit && (krw - availableBuyCost) >= 0){
-      let singleTradeAmount = availableBuyCost * buyQuantity
+      let singleTradeAmount = curPrice * buyQuantity;
 
       this.wallet.tradeAmount += singleTradeAmount;
       this.wallet.totalTradeAmount += singleTradeAmount;
       this.wallet.krw -= availableBuyCost;
 
       currency.quantity += buyQuantity;
-      currency.recentBoughtPrice = availableBuyCost;
+      currency.recentBoughtPrice = singleTradeAmount;
+      currency.isGoldenCross = false;
 
       console.log(`[${this.traderName}] Buy ${buyQuantity} ${name} / Pay ₩ ${Math.floor(singleTradeAmount)}`.red);
     }

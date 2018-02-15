@@ -42,6 +42,7 @@ class Currency {
     this.maxExpectedProfit = 0;
     this.sellPrice = 0;
     this.buyPrice = 0;
+    this.isGoldenCross = false;
 
     // MACD data
     this.histogramGraph = [];
