@@ -50,6 +50,7 @@ class Trader {
     this.collectDataCount = 0;
     this.coinCount = Object.keys(this.wallet.currency).length;
     this.cacheKrw = 0;
+    this.marketSize = 0;
   }
 
   start(){
@@ -127,7 +128,7 @@ class Trader {
       this.buyCoin(currency, curPrice);
     }
 
-    //console.log(`[${this.traderName}] ${currency.key} Price : ${curPrice} (${priceDiffRate}%) Macd : ${curMacd.toFixed(2)} (${macdDiffRate}%) Histo : ${curHisto.toFixed(2)} (${histoDiffRate}%) / ${Util.getTime().green}`);
+    console.log(`[${this.traderName}] ${currency.key} Price : ${curPrice} (${priceDiffRate}%) Macd : ${curMacd.toFixed(2)} (${macdDiffRate}%) Histo : ${curHisto.toFixed(2)} (${histoDiffRate}%) / ${Util.getTime().green}`);
   }
 
   checkStatus(){
@@ -167,6 +168,7 @@ class Trader {
         currency.macdGraph = graph.MACD.slice(0);
         currency.histogramGraph = graph.histogram.slice(0);
         currency.signalGraph = graph.signal.slice(0);
+        this.marketSize += currency.endPrice;
   
         collectEvents.emit('collectChartData');
       } catch(e) {
@@ -265,6 +267,9 @@ class Trader {
       this.wallet.krw += singleTradeAmount;
 
       currency.quantity -= sellQuantity;
+
+      // max Macd Point Re-initialized
+      currency.maxMacdPoint = 0;
       profit = currency.recentBoughtPrice - singleTradeAmount;
       console.log(`[${this.traderName}] Sell ${sellQuantity} ${name} / Earn ₩ ${Math.floor(profit)}`.red);
     }

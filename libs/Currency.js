@@ -48,8 +48,12 @@ class Currency {
     this.histogramGraph = [];
     this.macdGraph = [];
     this.signalGraph = [];
+    this.maxMacdPoint = 0;
 
-
+    // Manage Stack
+    this.stackPlus = 0;
+    this.stackMinus = 0;
+    this.stackCombo = 0;
   }
 }
 
